@@ -1,2 +1,3 @@
-# peer-sheet
-A peer-to-peer collaborative spreadsheet
+# Peer Sheet
+
+A peer-to-peer collaborative spreadsheet application.
