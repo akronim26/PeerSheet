@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/base64"
-	"errors"
+	"fmt"
 	"os"
 
 	"github.com/libp2p/go-libp2p/core/crypto"
@@ -12,24 +12,24 @@ import (
 func LoadIdentityFromEnv() (crypto.PrivKey, peer.ID, error) {
 	privKeyGen := os.Getenv("PRIVATE_KEY_GEN")
 	if privKeyGen == "" {
-		return nil, "", errors.New("PRIVATE_KEY_GEN environment variable is not set")
+		return nil, "", fmt.Errorf("PRIVATE_KEY_GEN environment variable is not set")
 	}
 
 	data, err := base64.StdEncoding.DecodeString(privKeyGen)
 	if err != nil {
-		return nil, "", errors.New("failed to decode private key generator string: " + err.Error())
+		return nil, "", fmt.Errorf("failed to decode private key generator string: %w", err)
 	}
 
 	privKey, err := crypto.UnmarshalPrivateKey(data)
 	if err != nil {
-		return nil, "", errors.New("failed to generate private key: " + err.Error())
+		return nil, "", fmt.Errorf("failed to generate private key: %w", err)
 	}
 
 	pubKey := privKey.GetPublic()
 
 	peerID, err := peer.IDFromPublicKey(pubKey)
 	if err != nil {
-		return nil, "", errors.New("failed to generate peer id: " + err.Error())
+		return nil, "", fmt.Errorf("failed to generate peer id: %w", err)
 	}
 	return privKey, peerID, nil
 }
